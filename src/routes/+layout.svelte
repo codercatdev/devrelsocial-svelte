@@ -2,14 +2,20 @@
 	import '../app.postcss';
 	import Footer from './Footer.svelte';
 
-	import { getSessions } from '../lib/utils/appwrite';
+	import { createSession, deleteSessions, getAccount } from '../lib/utils/appwrite';
 	import type { Models } from 'appwrite';
 
-	let user: Models.Account<any> | null = null;
+	let user: Models.Account<Models.Preferences> | undefined = undefined;
 
 	const getUser = async () => {
-		user = await getSessions();
+		user = await getAccount();
 	};
+
+	const logout = async () => {
+		user = undefined;
+		await deleteSessions();
+	};
+	getUser();
 </script>
 
 <div class="drawer">
@@ -71,19 +77,19 @@
 					</ul>
 				</div>
 				<div class="flex-none hidden lg:block">
-					{#if sessions}
+					{#if user}
 						<div class="dropdown dropdown-end dropdown-hover">
 							<label tabIndex={0} class="m-1 btn btn-primary">
 								{user.name}
 							</label>
 							<ul tabIndex={0} class="p-2 shadow dropdown-content menu bg-primary rounded-box w-52">
 								<li>
-									<a onClick={() => drsAccount.deleteSessions()}>Logout</a>
+									<a on:click|once={logout}>Logout</a>
 								</li>
 							</ul>
 						</div>
 					{:else}
-						<a class="btn btn-primary" onClick={() => drsAccount.createSession()}> Login </a>
+						<a class="btn btn-primary" on:click|once={createSession}> Login </a>
 					{/if}
 				</div>
 			</div>

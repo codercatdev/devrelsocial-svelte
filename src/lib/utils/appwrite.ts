@@ -1,10 +1,14 @@
 import { Client, Account } from 'appwrite';
 
-const endpoint = process.env.NEXT_PUBLIC_APPWRITE_END_POINT || '';
-const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID || '';
-const auth0BaseURL = process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL;
+import {
+	PUBLIC_APPWRITE_END_POINT,
+	PUBLIC_APPWRITE_PROJECT_ID,
+	PUBLIC_AUTH0_ISSUER_BASE_URL
+} from '$env/static/public';
 
-const client = new Client().setEndpoint(endpoint).setProject(projectId);
+const client = new Client()
+	.setEndpoint(PUBLIC_APPWRITE_END_POINT)
+	.setProject(PUBLIC_APPWRITE_PROJECT_ID);
 const account = new Account(client);
 
 export const createSession = async () => {
@@ -15,9 +19,9 @@ export const createSession = async () => {
 	}
 };
 
-export const getSessions = async () => {
+export const getAccount = async () => {
 	try {
-		return await account.listSessions();
+		return await account.get();
 	} catch (error) {
 		//failed to get sessoion go login
 		// createSession();
@@ -29,7 +33,7 @@ export const deleteSessions = async () => {
 		await account.deleteSessions();
 		//   setUser(null);
 		//   setSessions(null);
-		const wnd = window.open(`${auth0BaseURL}/v2/logout`);
+		const wnd = window.open(`${PUBLIC_AUTH0_ISSUER_BASE_URL}/v2/logout`);
 		setTimeout(() => {
 			wnd?.close();
 		}, 1000);
