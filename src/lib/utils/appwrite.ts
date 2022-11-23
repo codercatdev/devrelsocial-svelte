@@ -1,4 +1,6 @@
+import type { Models } from 'appwrite';
 import { Client, Account } from 'appwrite';
+import { writable } from 'svelte/store';
 
 import {
 	PUBLIC_APPWRITE_END_POINT,
@@ -10,6 +12,8 @@ const client = new Client()
 	.setEndpoint(PUBLIC_APPWRITE_END_POINT)
 	.setProject(PUBLIC_APPWRITE_PROJECT_ID);
 const account = new Account(client);
+
+export const user = writable<Models.Account<Models.Preferences> | undefined>(undefined);
 
 export const createSession = async () => {
 	try {
@@ -40,4 +44,10 @@ export const deleteSessions = async () => {
 	} catch (error) {
 		console.log(error);
 	}
+};
+
+// Account details
+
+export const createJWT = async () => {
+	return await account.createJWT();
 };

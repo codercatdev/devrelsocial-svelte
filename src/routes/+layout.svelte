@@ -2,17 +2,18 @@
 	import '../app.postcss';
 	import Footer from './Footer.svelte';
 
-	import { createSession, deleteSessions, getAccount } from '../lib/utils/appwrite';
+	import { createSession, deleteSessions, getAccount, user } from '../lib/utils/appwrite';
 	import type { Models } from 'appwrite';
 
-	let user: Models.Account<Models.Preferences> | undefined = undefined;
+	// let user: Models.Account<Models.Preferences> | undefined = undefined;
 
 	const getUser = async () => {
-		user = await getAccount();
+		const u = await getAccount();
+		$user = u;
 	};
 
 	const logout = async () => {
-		user = undefined;
+		$user = undefined;
 		await deleteSessions();
 	};
 	getUser();
@@ -77,10 +78,10 @@
 					</ul>
 				</div>
 				<div class="flex-none hidden lg:block">
-					{#if user}
+					{#if $user}
 						<div class="dropdown dropdown-end dropdown-hover">
 							<label tabIndex={0} class="m-1 btn btn-primary">
-								{user.name}
+								{$user.name}
 							</label>
 							<ul tabIndex={0} class="p-2 shadow dropdown-content menu bg-primary rounded-box w-52">
 								<li>
