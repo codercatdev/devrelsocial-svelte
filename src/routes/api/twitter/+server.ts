@@ -5,7 +5,6 @@ import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET = async ({ request }: { request: RequestHandler }) => {
 	// throw error(404, 'Alex Not found');
-
-	// return new Response(String('Alex'));
+	// throw redirect(302, 'https://codingcat.dev')
 	return Response.redirect('https://codingcat.dev', 302);
 };
